@@ -1,5 +1,6 @@
 # Jenkins Docker Image including the docker client
 This docker image includes the docker command to enable Jenkins to interact with a docker daemon.
+It includes a build of docker-compose working on alpine as well.
 
 ## Docker Socket integration
 
