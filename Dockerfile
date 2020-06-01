@@ -13,7 +13,7 @@ RUN cd /code/compose && \
     pip --no-cache-dir install -r requirements.txt -r requirements-dev.txt && \
     git rev-parse --short HEAD > compose/GITSHA
 
-# Build bootloader for alpine
+# Build python-installer with bootloader for alpine/musl
 RUN git clone --depth 1 --single-branch --branch master https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
     && cd /tmp/pyinstaller/bootloader \
     && CFLAGS="-Wno-stringop-overflow -Wno-stringop-truncation" python ./waf configure --no-lsb all \
