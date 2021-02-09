@@ -6,13 +6,14 @@
 #    git && \
 #    pip install pycrypto
 
-FROM python:3.7-alpine3.11 AS cmps
+FROM python:3.9-alpine3.13 AS cmps
 RUN apk -U --no-cache add \
    make gcc musl-dev libffi-dev openssl-dev zlib-dev\
-   git && \
+   git \
+   rust cargo && \
    pip install pycrypto
 
-ARG compose_version=1.26.2
+ARG compose_version=1.28.2
 
 RUN git clone --depth 1 --branch ${compose_version} https://github.com/docker/compose.git /code/compose
 
