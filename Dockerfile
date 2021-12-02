@@ -44,8 +44,11 @@ FROM jenkins/jenkins:alpine
 
 MAINTAINER trion development GmbH "info@trion.de"
 
-ENV JENKINS_USER=jenkins
+ENV JENKINS_USER=jenkins JAVA_OPTS=-Djenkins.install.runSetupWizard=false CASC_JENKINS_CONFIG=/var/jenkins_home/config.yaml
 USER root
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+COPY config.yaml /var/jenkins_home/config.yaml
 COPY entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/entrypoint.sh"]
 RUN apk --no-cache add shadow su-exec
