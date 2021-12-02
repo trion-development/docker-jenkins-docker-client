@@ -1,0 +1,3 @@
+authorize-project:latest
+configuration-as-code:latest
+role-strategy:latest
