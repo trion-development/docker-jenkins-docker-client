@@ -1,4 +1,5 @@
 jenkins:
+  systemMessage: "This Jenkins is managed by JCasC Plugin"
   securityRealm:
     local:
       allowsSignup: false

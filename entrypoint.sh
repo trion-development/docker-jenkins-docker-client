@@ -18,8 +18,25 @@ if [ -S ${DOCKER_SOCKET} ]; then
     #echo "adding ${DOCKER_GID} to group ${DOCKER_GROUP}"
     groupadd -for -g ${DOCKER_GID} ${DOCKER_GROUP}
     usermod -aG ${DOCKER_GROUP} jenkins
+
 fi
 
-# echo "Starting /usr/local/bin/jenkins.sh as ${JENKINS_USER}"
+if [[ -v JENKINS_CAC ]]; then
+  echo "Configuration as Code enabled"
+  export JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+  export CASC_JENKINS_CONFIG=/var/jenkins_home/config.yaml
+  /usr/local/bin/install-plugins.sh < /provisioning/plugins.txt
+  if [ ! -e /var/jenkins_home/config.yaml ]; then
+    echo "Configuration as Code: Installing default config"
+    cp /provisioning/config.yaml /var/jenkins_home/config.yaml
+  fi
+fi
 
+#if is root
+if [ "$EUID" -ne 0 ]; then
+    exec /usr/local/bin/jenkins.sh
+fi
+
+echo "Starting /usr/local/bin/jenkins.sh as ${JENKINS_USER}"
 su-exec ${JENKINS_USER} /usr/local/bin/jenkins.sh
+

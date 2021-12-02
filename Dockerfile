@@ -13,7 +13,7 @@ RUN apk -U --no-cache add \
    rust cargo && \
    pip install pycrypto
 
-ARG compose_version=1.28.2
+ARG compose_version=1.29.2
 
 RUN git clone --depth 1 --branch ${compose_version} https://github.com/docker/compose.git /code/compose
 
@@ -44,16 +44,15 @@ FROM jenkins/jenkins:alpine
 
 MAINTAINER trion development GmbH "info@trion.de"
 
-ENV JENKINS_USER=jenkins JAVA_OPTS=-Djenkins.install.runSetupWizard=false CASC_JENKINS_CONFIG=/var/jenkins_home/config.yaml
+ENV JENKINS_USER=jenkins CASC_JENKINS_CONFIG=/var/jenkins_home/config.yaml
 USER root
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-COPY config.yaml /var/jenkins_home/config.yaml
-COPY entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/entrypoint.sh"]
 RUN apk --no-cache add shadow su-exec
 
 COPY --from=cmps /usr/local/bin/docker-compose /usr/bin/docker-compose
 RUN  \
-  curl https://download.docker.com/linux/static/stable/x86_64/docker-19.03.12.tgz | tar xvz -C /tmp/ && \
+  curl https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz | tar xvz -C /tmp/ && \
   mv /tmp/docker/docker /usr/bin/docker
+
+COPY plugins.txt config.yaml /provisioning/
+COPY entrypoint.sh /usr/local/bin/
