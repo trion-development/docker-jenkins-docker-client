@@ -51,7 +51,7 @@ RUN apk --no-cache add shadow su-exec
 
 COPY --from=cmps /usr/local/bin/docker-compose /usr/bin/docker-compose
 RUN  \
-  curl https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz | tar xvz -C /tmp/ && \
+  curl https://download.docker.com/linux/static/stable/x86_64/docker-20.10.17.tgz | tar xvz -C /tmp/ && \
   mv /tmp/docker/docker /usr/bin/docker
 
 COPY plugins.txt config.yaml /provisioning/
