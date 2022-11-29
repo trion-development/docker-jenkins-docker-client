@@ -25,7 +25,7 @@ if [[ -v JENKINS_CAC ]]; then
   echo "Configuration as Code enabled"
   export JAVA_OPTS=-Djenkins.install.runSetupWizard=false
   export CASC_JENKINS_CONFIG=/var/jenkins_home/config.yaml
-  /usr/local/bin/install-plugins.sh < /provisioning/plugins.txt
+  /bin/jenkins-plugin-cli --plugin-file /provisioning/plugins.txt
   if [ ! -e /var/jenkins_home/config.yaml ]; then
     echo "Configuration as Code: Installing default config"
     cp /provisioning/config.yaml /var/jenkins_home/config.yaml
