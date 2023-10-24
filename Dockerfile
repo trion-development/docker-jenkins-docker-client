@@ -18,7 +18,7 @@ ARG compose_version=1.29.2
 RUN git clone --depth 1 --branch ${compose_version} https://github.com/docker/compose.git /code/compose
 
 RUN cd /code/compose && \
-    sed -i "s/PyYAML==5.4.1/PyYAML>=5.3,<7/g" requirements.txt \
+    sed -i "s/PyYAML==5.4.1/PyYAML>=5.3,<7/g" requirements.txt && \
     pip --no-cache-dir install -r requirements.txt -r requirements-dev.txt --ignore-installed && \
     git rev-parse --short HEAD > compose/GITSHA
 
