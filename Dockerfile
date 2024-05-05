@@ -6,7 +6,11 @@
 #    git && \
 #    pip install pycrypto
 
-FROM python:3.9-alpine3.13 AS cmps
+# python 3.12: module imp was renamed
+# python 3.11: KeyError: 'CALL_FUNCTION'
+# python 3.10 requires pyinstaller v5.x
+
+FROM python:3.10-alpine3.19 AS cmps
 RUN apk -U --no-cache add \
    make gcc musl-dev libffi-dev openssl-dev zlib-dev\
    git \
@@ -23,7 +27,7 @@ RUN cd /code/compose && \
     git rev-parse --short HEAD > compose/GITSHA
 
 # Build python-installer with bootloader for alpine/musl
-RUN git clone --depth 1 --single-branch --branch master https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
+RUN git clone --depth 1 --single-branch --branch v5.13.2 https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
     && cd /tmp/pyinstaller/bootloader \
     && CFLAGS="-Wno-stringop-overflow -Wno-stringop-truncation" python3 ./waf configure --no-lsb all \
     && pip install .. \
@@ -35,7 +39,7 @@ RUN git clone --depth 1 --single-branch --branch master https://github.com/pyins
 
 #statically link docker-compose
 RUN cd /code/compose && \
-    pyinstaller --clean --windowed --onefile docker-compose.spec && \
+    pyinstaller --clean docker-compose.spec && \
     mv dist/docker-compose /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
